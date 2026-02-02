@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>{{subject}}</title>
+</head>
+<body style="margin: 0; padding: 10px; background-color: #f0f9ff; font-family: Arial, sans-serif; direction: rtl; -webkit-text-size-adjust: 100%;">
+
+<!-- container قابل للتمرير -->
+<div style="width: 100%; max-width: 700px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 30px 20px; text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 10px;">🛡️</div>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800;">التقرير الأمني الشامل</h1>
+        <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px;">نظام MGU لإدارة الأمن السيبراني</p>
+        <p style="color: #64748b; margin: 5px 0 0 0; font-size: 12px; direction: ltr; word-break: break-all;">{{report_time}}</p>
+    </div>
+
+    <!-- Statistics -->
+    <div style="padding: 20px;">
+        <h2 style="color: #1e293b; font-size: 16px; margin: 0 0 15px 0; border-right: 4px solid #4f46e5; padding-right: 10px;">📊 إحصائيات النظام</h2>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 100px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-radius: 12px; padding: 20px 10px; text-align: center; color: #ffffff;">
+                <div style="font-size: 28px; font-weight: 900;">{{total_users}}</div>
+                <div style="font-size: 12px; margin-top: 5px;">المستخدمين</div>
+            </div>
+            <div style="flex: 1; min-width: 100px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 12px; padding: 20px 10px; text-align: center; color: #ffffff;">
+                <div style="font-size: 28px; font-weight: 900;">{{active_threats}}</div>
+                <div style="font-size: 12px; margin-top: 5px;">تهديدات</div>
+            </div>
+            <div style="flex: 1; min-width: 100px; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); border-radius: 12px; padding: 20px 10px; text-align: center; color: #ffffff;">
+                <div style="font-size: 28px; font-weight: 900;">{{blocked_attempts}}</div>
+                <div style="font-size: 12px; margin-top: 5px;">محاولات</div>
+            </div>
+        </div>
+
+        <!-- Alerts Section مع تمرير أفقي -->
+        <h2 style="color: #dc2626; font-size: 16px; margin: 20px 0 10px 0; border-right: 4px solid #dc2626; padding-right: 10px;">
+            🚨 التنبيهات النشطة ({{alerts_count}})
+        </h2>
+        
+        <!-- حاوية قابلة للتمرير -->
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; min-width: 500px; background: #ffffff;">
+                <thead>
+                    <tr style="background-color: #fef2f2;">
+                        <th style="padding: 12px 8px; color: #dc2626; font-weight: 800; font-size: 12px; text-align: right; border-bottom: 2px solid #fecaca; white-space: nowrap;">الوقت</th>
+                        <th style="padding: 12px 8px; color: #dc2626; font-weight: 800; font-size: 12px; text-align: right; border-bottom: 2px solid #fecaca; white-space: nowrap;">النوع</th>
+                        <th style="padding: 12px 8px; color: #dc2626; font-weight: 800; font-size: 12px; text-align: right; border-bottom: 2px solid #fecaca; white-space: nowrap;">المستخدم</th>
+                        <th style="padding: 12px 8px; color: #dc2626; font-weight: 800; font-size: 12px; text-align: right; border-bottom: 2px solid #fecaca; white-space: nowrap;">IP</th>
+                        <th style="padding: 12px 8px; color: #dc2626; font-weight: 800; font-size: 12px; text-align: center; border-bottom: 2px solid #fecaca; white-space: nowrap;">الخطورة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{{alerts_table_rows}}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Logs Section مع تمرير أفقي -->
+        <h2 style="color: #4f46e5; font-size: 16px; margin: 20px 0 10px 0; border-right: 4px solid #4f46e5; padding-right: 10px;">
+            📋 آخر السجلات
+        </h2>
+        
+        <!-- حاوية قابلة للتمرير -->
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; min-width: 500px; background: #ffffff; font-size: 11px;">
+                <thead>
+                    <tr style="background-color: #eef2ff;">
+                        <th style="padding: 10px 8px; color: #4f46e5; font-weight: 800; text-align: right; border-bottom: 2px solid #c7d2fe; white-space: nowrap;">الوقت</th>
+                        <th style="padding: 10px 8px; color: #4f46e5; font-weight: 800; text-align: right; border-bottom: 2px solid #c7d2fe; white-space: nowrap;">النوع</th>
+                        <th style="padding: 10px 8px; color: #4f46e5; font-weight: 800; text-align: right; border-bottom: 2px solid #c7d2fe; white-space: nowrap;">المستخدم</th>
+                        <th style="padding: 10px 8px; color: #4f46e5; font-weight: 800; text-align: right; border-bottom: 2px solid #c7d2fe; white-space: nowrap;">IP</th>
+                        <th style="padding: 10px 8px; color: #4f46e5; font-weight: 800; text-align: center; border-bottom: 2px solid #c7d2fe; white-space: nowrap;">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{{logs_table_rows}}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary -->
+        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; color: #475569; font-size: 13px; line-height: 1.8;">
+            <strong style="color: #1e293b; font-size: 15px; display: block; margin-bottom: 8px;">📌 ملخص التقرير:</strong>
+            • المستخدمين: <strong style="color: #4f46e5;">{{total_users}}</strong> | 
+            التهديدات: <strong style="color: #dc2626;">{{active_threats}}</strong> | 
+            المحاولات: <strong style="color: #ea580c;">{{blocked_attempts}}</strong><br>
+            • آخر تحديث: <strong style="color: #64748b;">{{report_time}}</strong>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background-color: #1e293b; padding: 20px; text-align: center; color: #94a3b8; font-size: 11px;">
+        MGU Security Command Center<br>
+        {{report_time}}
+    </div>
+
+</div>
+
+</body>
+</html>

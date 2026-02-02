@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز القيادة | MGU - Security Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- إضافة مكتبة EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #7c3aed;
+            --accent: #ec4899;
+            --gold: #f59e0b;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --success: #10b981;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f5f3ff 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid var(--border-color);
+            padding: 2rem;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .brand-logo {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 
+                0 10px 30px -10px rgba(79, 70, 229, 0.4),
+                0 0 0 4px rgba(255, 255, 255, 0.5),
+                0 0 0 8px rgba(79, 70, 229, 0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .brand h2 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* إعدادات EmailJS في Sidebar */
+        .email-settings {
+            background: rgba(79, 70, 229, 0.05);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .email-settings h3 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            background: white;
+            color: var(--text-primary);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            width: 40px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 16px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border-color: rgba(79, 70, 229, 0.2);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 300px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 800;
+        }
+
+        .header-info p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .live-text {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-right: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 350px;
+            transform: translateX(-150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border-color);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+        .toast.warning { border-color: var(--warning); }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .toast.error .toast-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .toast.warning .toast-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.75rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(79, 70, 229, 0.3);
+        }
+
+        .stat-card.critical {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(255, 255, 255, 0.9));
+        }
+
+        .stat-card.critical::before {
+            background: linear-gradient(90deg, var(--danger), #dc2626);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .stat-card.critical .stat-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+            animation: shake 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            5% { transform: rotate(-5deg); }
+            10% { transform: rotate(5deg); }
+            15% { transform: rotate(0deg); }
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .stat-trend.down {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.75rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card.critical .stat-value {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            -webkit-background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .panel:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-secondary);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-title i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(180deg);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Threats List */
+        .threat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .threat-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: #ffffff;
+            border-radius: 16px;
+            border-right: 4px solid;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .threat-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .threat-item.critical { 
+            border-color: var(--danger); 
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+        }
+        .threat-item.high { 
+            border-color: var(--warning); 
+            background: linear-gradient(135deg, #fff7ed, #ffffff);
+        }
+        .threat-item.medium { 
+            border-color: var(--primary); 
+            background: linear-gradient(135deg, #eef2ff, #ffffff);
+        }
+
+        .threat-level {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .threat-level.critical { 
+            background: rgba(239, 68, 68, 0.15); 
+            color: #dc2626; 
+        }
+        .threat-level.high { 
+            background: rgba(249, 115, 22, 0.15); 
+            color: #ea580c; 
+        }
+        .threat-level.medium { 
+            background: rgba(79, 70, 229, 0.15); 
+            color: var(--primary); 
+        }
+
+        .threat-content {
+            flex: 1;
+        }
+
+        .threat-content h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .threat-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .threat-meta {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            color: var(--primary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-action.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+
+        .btn-action.danger:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .hidden { 
+            display: none !important; 
+        }
+
+        /* Tables */
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.75rem;
+        }
+
+        .modern-table th {
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 2px solid var(--bg-secondary);
+        }
+
+        .modern-table td {
+            padding: 1.25rem 1rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .modern-table tr:hover td {
+            background: #f8fafc;
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .modern-table tr td:first-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .modern-table tr td:last-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-success { 
+            background: rgba(16, 185, 129, 0.15); 
+            color: #059669; 
+        }
+        .status-failed { 
+            background: rgba(239, 68, 68, 0.15); 
+            color: #dc2626; 
+        }
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.75rem;
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .sidebar { 
+                width: 280px;
+            }
+            .main-content { 
+                margin-right: 280px; 
+            }
+        }
+
+        @media (max-width: 968px) {
+            .sidebar { 
+                transform: translateX(100%); 
+                transition: transform 0.3s;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content { 
+                margin-right: 0; 
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .toast {
+                min-width: calc(100vw - 4rem);
+                left: 2rem;
+                right: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2>MGU</h2>
+            <p>مركز العمليات الأمنية</p>
+        </div>
+
+        <!-- إعدادات EmailJS -->
+        <div class="email-settings">
+            <h3><i class="fas fa-envelope"></i> إعدادات التنبيهات</h3>
+            <input type="email" 
+                   class="email-input" 
+                   id="adminEmail" 
+                   placeholder="بريد المسؤول (مثال: admin@mgu.edu)"
+                   value="">
+            <label class="toggle-switch">
+                <input type="checkbox" id="emailNotifications" checked>
+                <span>تفعيل إشعارات البريد</span>
+            </label>
+            <button class="btn-action" style="width: 100%; margin-top: 0.75rem; font-size: 0.8rem;" onclick="testEmailConnection()">
+                <i class="fas fa-paper-plane"></i>
+                اختبار الاتصال
+            </button>
+            <!-- زر إرسال التقرير الشامل اليدوي -->
+            <button class="btn-action" style="width: 100%; margin-top: 0.5rem; font-size: 0.8rem; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;" onclick="sendFullSecurityReport()">
+                <i class="fas fa-file-export"></i>
+                إرسال التقرير الشامل
+            </button>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection('overview')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>لوحة المراقبة</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('threats')">
+                    <i class="fas fa-bug"></i>
+                    <span>التهديدات الأمنية</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('logs')">
+                    <i class="fas fa-history"></i>
+                    <span>سجلات النظام</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('users')">
+                    <i class="fas fa-users-cog"></i>
+                    <span>إدارة المستخدمين</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" style="margin-top: 2rem; color: var(--danger);" onclick="logout()">
+                    <i class="fas fa-power-off"></i>
+                    <span>إنهاء الجلسة</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <div class="header-info">
+                <h1>مركز القيادة والسيطرة</h1>
+                <p>نظام MGU للحماية السيبرانية المتقدمة</p>
+            </div>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span class="live-text">LIVE MONITORING</span>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <span class="stat-trend"><i class="fas fa-arrow-up"></i> 12%</span>
+                </div>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">المستخدمين النشطين</div>
+            </div>
+
+            <div class="stat-card critical" id="threatCard" style="display: none;">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--danger);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <span class="stat-trend down"><i class="fas fa-exclamation"></i> حرج</span>
+                </div>
+                <div class="stat-value" id="activeThreats">0</div>
+                <div class="stat-label">تهديدات نشطة</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <span class="stat-trend"><i class="fas fa-shield-alt"></i> محمي</span>
+                </div>
+                <div class="stat-value" id="blockedAttempts">0</div>
+                <div class="stat-label">محاولات مرفوضة</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <span class="stat-trend">99.9%</span>
+                </div>
+                <div class="stat-value" style="font-size: 2rem; margin-top: 0.5rem;">ممتاز</div>
+                <div class="stat-label">أداء النظام</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid" id="overviewSection">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-chart-area"></i>
+                        تحليل حركة المرور الشبكية
+                    </h3>
+                    <button class="btn-icon" onclick="refreshData()" title="تحديث البيانات">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-bell" style="color: var(--danger);"></i>
+                        التنبيهات الحرجة
+                    </h3>
+                    <button class="btn-icon danger" onclick="clearAllThreats()">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="threat-list" id="alertsList">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- باقي الأقسام -->
+        <div class="panel hidden" id="threatsSection" style="margin-top: 2rem;">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    <i class="fas fa-shield-virus" style="color: var(--danger);"></i>
+                    سجل التهديدات الأمنية
+                </h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-action" onclick="filterThreats('all')">الكل</button>
+                    <button class="btn-action danger" onclick="clearAllThreats()">مسح الكل</button>
+                </div>
+            </div>
+            <div class="threat-list" id="allThreatsList" style="max-height: 600px; overflow-y: auto;">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+
+        <div class="panel hidden" id="logsSection" style="margin-top: 2rem;">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    <i class="fas fa-terminal" style="color: var(--primary);"></i>
+                    سجلات النظام الكاملة
+                </h3>
+                <button class="btn-icon" onclick="exportLogs()">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="modern-table" id="logsTable">
+                    <thead>
+                        <tr>
+                            <th>الوقت</th>
+                            <th>النوع</th>
+                            <th>المستخدم</th>
+                            <th>عنوان IP</th>
+                            <th>الجهاز</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Dynamic Content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel hidden" id="usersSection" style="margin-top: 2rem;">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    <i class="fas fa-users" style="color: var(--secondary);"></i>
+                    إدارة المستخدمين المسجلين
+                </h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" placeholder="بحث..." style="padding: 0.5rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); background: white; color: var(--text-primary);">
+                    <button class="btn-action">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="modern-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>الرقم الجامعي</th>
+                            <th>التخصص</th>
+                            <th>آخر دخول</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Dynamic Content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ==========================================
+        // تهيئة EmailJS
+        // ==========================================
+        const EMAILJS_CONFIG = {
+            PUBLIC_KEY: 'HuZF-UFGVS_IF3L2a',
+            SERVICE_ID: 'service_b7ntftw',
+            TEMPLATE_ID: 'template_uf7lcci',           // للتنبيهات الفورية
+            TEMPLATE_FULL_REPORT_ID: 'template_uf7lcci' // للتقرير الشامل - غير هذا بالـ ID الصحيح
+        };
+
+        // تهيئة المكتبة
+        (function() {
+            emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+        })();
+
+        // Auth Check
+        const adminSession = JSON.parse(sessionStorage.getItem('adminSession'));
+        if (!adminSession) {
+            window.location.href = 'admin-login.html';
+        }
+
+        // ==========================================
+        // نظام Toast Notifications
+        // ==========================================
+        function showToast(title, message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas ${icons[type]}"></i>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        // ==========================================
+        // دالة إرسال التقرير الشامل (محدثة)
+        // ==========================================
+        async function sendFullSecurityReport() {
+            const emailInput = document.getElementById('adminEmail');
+            const adminEmail = emailInput.value.trim();
+            
+            if (!adminEmail) {
+                showToast('خطأ', 'الرجاء إدخال بريد المسؤول أولاً', 'error');
+                return false;
+            }
+
+            // جلب البيانات
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const alerts = JSON.parse(localStorage.getItem('alerts')) || [];
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            
+            console.log('📊 البيانات الموجودة:', {
+                users: students.length,
+                alerts: alerts.length,
+                logs: logs.length
+            });
+            
+            // تصفية البيانات
+            const activeAlerts = alerts.filter(a => a.status === 'active');
+            const failedAttempts = logs.filter(l => l.type === 'login_failed' || (!l.success && l.type !== 'register')).length;
+            
+            // بناء جدول التنبيهات
+            let alertsRows = '';
+            if (activeAlerts.length > 0) {
+                activeAlerts.slice(-10).reverse().forEach((alert, index) => {
+                    const time = new Date(alert.timestamp).toLocaleString('ar-SA');
+                    const type = alert.type || 'غير معروف';
+                    const user = alert.details?.studentId || alert.details?.username || 'System';
+                    const ip = alert.details?.ip || '-';
+                    const risk = alert.riskLevel || 'medium';
+                    
+                    let riskColor = '#4f46e5';
+                    let riskBg = '#eef2ff';
+                    if (risk === 'critical') { riskColor = '#dc2626'; riskBg = '#fef2f2'; }
+                    else if (risk === 'high') { riskColor = '#ea580c'; riskBg = '#fff7ed'; }
+                    
+                    alertsRows += `<tr style="background-color: ${riskBg}; border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 10px; font-size: 12px; direction: ltr; text-align: right; color: #64748b;">${time}</td>
+                        <td style="padding: 10px; font-weight: 600; font-size: 12px; color: #1e293b;">${type}</td>
+                        <td style="padding: 10px; color: #475569; font-size: 12px; direction: ltr; text-align: right;">${user}</td>
+                        <td style="padding: 10px; color: #dc2626; font-family: monospace; font-size: 11px; direction: ltr; text-align: right;">${ip}</td>
+                        <td style="padding: 10px;"><span style="background-color: ${riskColor}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700;">${risk}</span></td>
+                    </tr>`;
+                });
+            } else {
+                alertsRows = '<tr><td colspan="5" style="padding: 20px; text-align: center; color: #10b981; font-weight: 600;">لا توجد تنبيهات نشطة ✅</td></tr>';
+            }
+            
+            // بناء جدول السجلات (آخر 20)
+            let logsRows = '';
+            const recentLogs = logs.slice(-20).reverse();
+            
+            if (recentLogs.length === 0) {
+                logsRows = '<tr><td colspan="5" style="padding: 20px; text-align: center; color: #64748b;">لا توجد سجلات</td></tr>';
+            } else {
+                recentLogs.forEach((log, index) => {
+                    const time = new Date(log.timestamp).toLocaleString('ar-SA');
+                    const type = log.type || 'غير معروف';
+                    const user = log.studentId || log.username || 'Anonymous';
+                    const ip = log.ip || '-';
+                    
+                    // إصلاح تحديد الحالة
+                    const isSuccess = log.success === true || 
+                                     log.type === 'register' || 
+                                     log.type === 'user_created' || 
+                                     log.type === 'signup';
+                                     
+                    const status = isSuccess ? '✅ ناجح' : '❌ فاشل';
+                    const statusColor = isSuccess ? '#10b981' : '#ef4444';
+                    
+                    logsRows += `<tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 8px; color: #64748b; font-size: 11px; direction: ltr; text-align: right;">${time}</td>
+                        <td style="padding: 8px; color: #1e293b; font-weight: 600; font-size: 11px;">${type}</td>
+                        <td style="padding: 8px; color: #475569; font-size: 11px; direction: ltr; text-align: right;">${user}</td>
+                        <td style="padding: 8px; color: #dc2626; font-family: monospace; font-size: 10px; direction: ltr; text-align: right;">${ip}</td>
+                        <td style="padding: 8px; color: ${statusColor}; font-weight: 700; font-size: 11px;">${status}</td>
+                    </tr>`;
+                });
+            }
+            
+            // إعداد بيانات القالب - تأكد من أن الأسماء تطابق قالب EmailJS
+            const templateParams = {
+                to_email: adminEmail,
+                from_name: 'MGU Security System',
+                subject: `📊 التقرير الأمني الشامل - ${new Date().toLocaleDateString('ar-SA')}`,
+                
+                // الإحصائيات
+                total_users: students.length,
+                active_threats: activeAlerts.length,
+                blocked_attempts: failedAttempts,
+                alerts_count: activeAlerts.length,
+                report_time: new Date().toLocaleString('ar-SA'),
+                
+                // HTML الجداول - يجب استخدام {{{ }}} في قالب EmailJS لعرضها كـ HTML
+                alerts_table_rows: alertsRows,
+                logs_table_rows: logsRows
+            };
+            
+            console.log('📧 إرسال التقرير إلى:', adminEmail);
+            console.log('📋 حجم بيانات التنبيهات:', alertsRows.length, 'حرف');
+            console.log('📋 حجم بيانات السجلات:', logsRows.length, 'حرف');
+
+            try {
+                showToast('جاري الإرسال', 'جاري إعداد التقرير وإرساله...', 'warning');
+                
+                const response = await emailjs.send(
+                    EMAILJS_CONFIG.SERVICE_ID,
+                    EMAILJS_CONFIG.TEMPLATE_FULL_REPORT_ID,
+                    templateParams
+                );
+                
+                console.log('✅ تم الإرسال:', response);
+                showToast('تم الإرسال بنجاح', `تم إرسال التقرير إلى ${adminEmail}`, 'success');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ خطأ في الإرسال:', error);
+                showToast('فشل الإرسال', error.text || 'تعذر إرسال التقرير', 'error');
+                return false;
+            }
+        }
+
+        // ==========================================
+        // الدوال الأخرى (لا تغيير فيها)
+        // ==========================================
+        async function sendSecurityAlert(alertType, details) {
+            const emailInput = document.getElementById('adminEmail');
+            const notificationsEnabled = document.getElementById('emailNotifications').checked;
+            const adminEmail = emailInput.value.trim();
+            
+            if (!notificationsEnabled || !adminEmail) return false;
+
+            const alertTitles = {
+                'intrusion_attempt': '🚨 محاولة اختراق مكتشفة',
+                'multiple_failures': '⚠️ محاولات تسجيل دخول فاشلة متكررة',
+                'critical_threat': '🔴 تهديد أمني حرج',
+                'user_blocked': '🛡️ تم حظر مستخدم',
+                'system_alert': '⚡ تنبيه نظام'
+            };
+
+            const templateParams = {
+                to_email: adminEmail,
+                from_name: 'MGU Security System',
+                reply_to: 'security@mgu.edu',
+                subject: alertTitles[alertType] || 'تنبيه أمني',
+                message: `
+                    تم اكتشاف نشاط أمني في النظام:
+                    
+                    النوع: ${alertType}
+                    التفاصيل: ${JSON.stringify(details, null, 2)}
+                    الوقت: ${new Date().toLocaleString('ar-SA')}
+                    IP: ${details.ip || 'غير معروف'}
+                    المستخدم: ${details.username || details.studentId || 'غير معروف'}
+                `,
+                time: new Date().toLocaleString('ar-SA')
+            };
+
+            try {
+                const response = await emailjs.send(
+                    EMAILJS_CONFIG.SERVICE_ID,
+                    EMAILJS_CONFIG.TEMPLATE_ID,
+                    templateParams
+                );
+                console.log('تم إرسال التنبيه:', response);
+                return true;
+            } catch (error) {
+                console.error('فشل إرسال التنبيه:', error);
+                return false;
+            }
+        }
+
+        async function testEmailConnection() {
+            const emailInput = document.getElementById('adminEmail');
+            const adminEmail = emailInput.value.trim();
+            
+            if (!adminEmail) {
+                showToast('خطأ', 'الرجاء إدخال بريد إلكتروني أولاً', 'error');
+                return;
+            }
+
+            showToast('جاري الاختبار', 'جاري إرسال رسالة تجريبية...', 'warning');
+            
+            const testResult = await sendSecurityAlert('system_alert', {
+                message: '这是一条测试消息 - Test Message from MGU Security',
+                ip: '127.0.0.1',
+                username: 'System Admin'
+            });
+            
+            if (testResult) {
+                showToast('نجاح', 'تم إرسال رسالة الاختبار بنجاح', 'success');
+            }
+        }
+
+        function saveEmailSettings() {
+            const email = document.getElementById('adminEmail').value;
+            const enabled = document.getElementById('emailNotifications').checked;
+            localStorage.setItem('mgu_email_settings', JSON.stringify({
+                email: email,
+                enabled: enabled
+            }));
+        }
+
+        function loadEmailSettings() {
+            const settings = JSON.parse(localStorage.getItem('mgu_email_settings'));
+            if (settings) {
+                document.getElementById('adminEmail').value = settings.email || '';
+                document.getElementById('emailNotifications').checked = settings.enabled !== false;
+            }
+        }
+
+        document.getElementById('adminEmail').addEventListener('change', saveEmailSettings);
+        document.getElementById('emailNotifications').addEventListener('change', saveEmailSettings);
+
+        function updateStats() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const alerts = JSON.parse(localStorage.getItem('alerts')) || [];
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            
+            const failedAttempts = logs.filter(l => l.type === 'login_failed' || (!l.success && l.type !== 'register')).length;
+            const activeThreats = alerts.filter(a => a.status === 'active' && a.riskLevel === 'critical').length;
+
+            document.getElementById('totalUsers').textContent = students.length;
+            document.getElementById('blockedAttempts').textContent = failedAttempts;
+            
+            if (activeThreats > 0) {
+                const prevCount = parseInt(document.getElementById('activeThreats').textContent) || 0;
+                if (activeThreats > prevCount) {
+                    const newThreat = alerts.find(a => a.status === 'active' && a.riskLevel === 'critical');
+                    if (newThreat) {
+                        sendSecurityAlert('critical_threat', newThreat.details);
+                    }
+                }
+                document.getElementById('activeThreats').textContent = activeThreats;
+                document.getElementById('threatCard').style.display = 'block';
+            } else {
+                document.getElementById('threatCard').style.display = 'none';
+            }
+            
+            return { students, alerts, logs };
+        }
+
+        async function blockUser(id) {
+            if (confirm(`هل تريد حظر المستخدم ${id}؟`)) {
+                await sendSecurityAlert('user_blocked', {
+                    studentId: id,
+                    action: 'User Blocked',
+                    ip: 'ADMIN_PANEL',
+                    timestamp: new Date().toISOString()
+                });
+                showToast('تم الحظر', `تم حظر المستخدم ${id}`, 'success');
+            }
+        }
+
+        async function resolveThreat(id) {
+            const alerts = JSON.parse(localStorage.getItem('alerts')) || [];
+            const alert = alerts.find(a => a.id === id);
+            
+            if (alert) {
+                alert.status = 'resolved';
+                alert.resolvedAt = new Date().toISOString();
+                localStorage.setItem('alerts', JSON.stringify(alerts));
+                refreshData();
+                showToast('تم الإغلاق', 'تم إغلاق التهديد بنجاح', 'success');
+            }
+        }
+
+        async function clearAllThreats() {
+            if (confirm('هل أنت متأكد من مسح جميع التهديدات؟')) {
+                const alerts = JSON.parse(localStorage.getItem('alerts')) || [];
+                alerts.forEach(a => {
+                    a.status = 'resolved';
+                    a.resolvedAt = new Date().toISOString();
+                });
+                localStorage.setItem('alerts', JSON.stringify(alerts));
+                refreshData();
+                showToast('تم المسح', 'تم مسح جميع التهديدات', 'success');
+            }
+        }
+
+        // Chart
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient1.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
+        gradient1.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+        const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient2.addColorStop(0, 'rgba(239, 68, 68, 0.3)');
+        gradient2.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', 'الآن'],
+                datasets: [{
+                    label: 'الوصولات الشرعية',
+                    data: [12, 8, 45, 89, 67, 34, 56],
+                    borderColor: '#4f46e5',
+                    backgroundColor: gradient1,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4f46e5',
+                    pointBorderWidth: 3,
+                    pointRadius: 6
+                }, {
+                    label: 'المحاولات المشبوهة',
+                    data: [2, 1, 5, 12, 8, 4, 3],
+                    borderColor: '#ef4444',
+                    backgroundColor: gradient2,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#ef4444',
+                    pointBorderWidth: 3,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'left',
+                        labels: {
+                            color: '#64748b',
+                            font: { family: 'Tajawal', size: 13, weight: '600' },
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(148, 163, 184, 0.1)', drawBorder: false },
+                        ticks: { color: '#64748b', font: { family: 'Tajawal' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b', font: { family: 'Tajawal' } }
+                    }
+                }
+            }
+        });
+
+        function renderAlerts(alerts) {
+            const container = document.getElementById('alertsList');
+            container.innerHTML = '';
+            
+            const criticalAlerts = alerts.filter(a => a.riskLevel === 'critical' || a.riskLevel === 'high').slice(-4);
+            
+            if (criticalAlerts.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success); margin-bottom: 1rem; display: block;"></i>
+                        لا توجد تهديدات حرجة حالياً
+                    </div>
+                `;
+                return;
+            }
+
+            const titles = {
+                'multiple_failed_logins': 'محاولات تسلل متكررة',
+                'admin_intrusion_attempt': 'محاولة اختراق إداري',
+                'impossible_travel': 'تنقل مستحيل',
+                'unusual_time': 'نشاط غير معتاد'
+            };
+
+            criticalAlerts.forEach(alert => {
+                const item = document.createElement('div');
+                item.className = `threat-item ${alert.riskLevel}`;
+                item.innerHTML = `
+                    <div class="threat-level ${alert.riskLevel}">${alert.riskLevel}</div>
+                    <div class="threat-content">
+                        <h4>${titles[alert.type] || alert.type}</h4>
+                        <p>${alert.details?.studentId || alert.details?.username || 'System'}</p>
+                    </div>
+                    <div class="threat-meta">
+                        <span><i class="fas fa-clock"></i> ${new Date(alert.timestamp).toLocaleTimeString('ar-SA')}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${alert.details?.ip}</span>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderAllThreats(alerts) {
+            const container = document.getElementById('allThreatsList');
+            container.innerHTML = '';
+            
+            const activeAlerts = alerts.filter(a => a.status === 'active');
+            
+            if (activeAlerts.length === 0) {
+                container.innerHTML = '<div class="threat-item" style="justify-content: center; border-color: var(--success);"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.5rem;"></i> لا توجد تهديدات نشطة</div>';
+                return;
+            }
+
+            activeAlerts.forEach(alert => {
+                const item = document.createElement('div');
+                item.className = `threat-item ${alert.riskLevel}`;
+                item.innerHTML = `
+                    <div class="threat-level ${alert.riskLevel}">${alert.riskLevel}</div>
+                    <div class="threat-content">
+                        <h4>${alert.type}</h4>
+                        <p>${alert.details?.details || '威胁 detected'}</p>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-network-wired"></i> ${alert.details?.ip} | 
+                            <i class="fas fa-clock"></i> ${new Date(alert.timestamp).toLocaleString('ar-SA')}
+                        </small>
+                    </div>
+                    <button class="btn-action" onclick="resolveThreat(${alert.id})" style="margin-right: auto;">
+                        <i class="fas fa-check"></i> إغلاق
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderLogs(logs) {
+            const tbody = document.getElementById('logsTableBody');
+            tbody.innerHTML = '';
+            
+            logs.slice(-20).reverse().forEach(log => {
+                const row = document.createElement('tr');
+                
+                // إصلاح: التأكد من تحديد الحالة بشكل صحيح
+                const isSuccess = log.success === true || 
+                                 log.type === 'register' || 
+                                 log.type === 'user_created' || 
+                                 log.type === 'signup';
+                                 
+                const statusClass = isSuccess ? 'status-success' : 'status-failed';
+                const statusText = isSuccess ? 'ناجح' : 'فاشل';
+                
+                row.innerHTML = `
+                    <td style="font-family: monospace; color: var(--primary); font-weight: 700;">${new Date(log.timestamp).toLocaleString('ar-SA')}</td>
+                    <td><span style="color: var(--text-primary); font-weight: 600;">${log.type}</span></td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <div class="user-avatar">${(log.studentId || log.username || 'A')[0]}</div>
+                            <span style="font-weight: 700;">${log.studentId || log.username || 'Anonymous'}</span>
+                        </div>
+                    </td>
+                    <td style="font-family: monospace; direction: ltr; text-align: right; color: var(--text-secondary);">${log.ip}</td>
+                    <td style="color: var(--text-secondary); font-size: 0.9rem;">${log.device || '-'}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderUsers(students) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                const lastLogin = student.lastLogin 
+                    ? new Date(student.lastLogin).toLocaleDateString('ar-SA')
+                    : '<span style="color: var(--text-secondary);">لم يسبق له</span>';
+                
+                const status = student.lastLogin && (new Date() - new Date(student.lastLogin)) < 86400000
+                    ? '<span class="status-badge status-success">نشط الآن</span>'
+                    : '<span class="status-badge status-pending">غير نشط</span>';
+
+                row.innerHTML = `
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <div class="user-avatar">${student.name.charAt(0)}</div>
+                            <div>
+                                <div style="font-weight: 800; color: var(--text-primary);">${student.name}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${student.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-family: monospace; color: var(--primary); font-weight: 700;">${student.id}</td>
+                    <td style="font-weight: 600;">${student.major}</td>
+                    <td style="color: var(--text-secondary);">${lastLogin}</td>
+                    <td>${status}</td>
+                    <td>
+                        <button class="btn-icon" style="width: 35px; height: 35px;" onclick="viewUser('${student.id}')" title="عرض التفاصيل">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-icon" style="width: 35px; height: 35px; color: var(--danger);" onclick="blockUser('${student.id}')" title="حظر">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showSection(section) {
+            ['overview', 'threats', 'logs', 'users'].forEach(s => {
+                document.getElementById(s + 'Section').classList.add('hidden');
+            });
+            
+            if (section === 'overview') {
+                document.getElementById('overviewSection').classList.remove('hidden');
+            } else {
+                document.getElementById(section + 'Section').classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.closest('.nav-link').classList.add('active');
+        }
+
+        function viewUser(id) {
+            showToast('عرض المستخدم', `عرض تفاصيل المستخدم: ${id}`, 'warning');
+        }
+
+        function exportLogs() {
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            const dataStr = JSON.stringify(logs, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mgu-logs-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            showToast('تم التصدير', 'تم تصدير السجلات بنجاح', 'success');
+        }
+
+        function filterThreats(filter) {
+            refreshData();
+        }
+
+        function refreshData() {
+            const { students, alerts, logs } = updateStats();
+            renderAlerts(alerts);
+            renderAllThreats(alerts);
+            renderLogs(logs);
+            renderUsers(students);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminSession');
+            window.location.href = 'index.html';
+        }
+
+        // Init
+        loadEmailSettings();
+        updateStats();
+        refreshData();
+
+        setInterval(() => {
+            const { alerts } = updateStats();
+            renderAlerts(alerts);
+        }, 5000);
+    </script>
+</body>
+</html>

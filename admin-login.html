@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الإدارة | MGU - جامعة ماجد الشعباني</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --background: #f1f5f9;
+            --surface: rgba(255, 255, 255, 0.98);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(30, 64, 175, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 64, 175, 0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.05),
+                0 10px 10px -5px rgba(0, 0, 0, 0.01),
+                0 0 0 1px rgba(148, 163, 184, 0.1);
+            position: relative;
+            z-index: 2;
+            margin: 2rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(148, 163, 184, 0.15);
+        }
+
+        .danger-zone {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 0.6rem 1.75rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.3);
+            z-index: 10;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(30, 64, 175, 0.2), transparent);
+            animation: scan 4s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(650px); }
+        }
+
+        .header {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .admin-badge {
+            width: 110px;
+            height: 110px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 2px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: #1e40af;
+            box-shadow: 
+                0 10px 25px -5px rgba(30, 64, 175, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .admin-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 20px 35px -5px rgba(30, 64, 175, 0.25),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .admin-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        .admin-badge i {
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            transform: translateY(-1px);
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 3rem;
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            outline: none;
+            font-weight: 500;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        input:focus {
+            border-color: var(--primary-light);
+            background: white;
+            box-shadow: 
+                0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 5px;
+            z-index: 10;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-light);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        input:focus ~ .input-icon {
+            color: var(--primary-light);
+        }
+
+        .security-note {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #991b1b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        .security-note i {
+            color: var(--danger);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), #1e3a8a);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 6px -1px rgba(30, 64, 175, 0.2),
+                0 2px 4px -2px rgba(30, 64, 175, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 20px -5px rgba(30, 64, 175, 0.3),
+                0 4px 6px -2px rgba(30, 64, 175, 0.15);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .attempts-tracker {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            color: #7f1d1d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .attempts-count {
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid #fecaca;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .back-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .back-link a:hover {
+            color: var(--primary);
+            transform: translateX(-3px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: white;
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--danger);
+            font-size: 1.25rem;
+        }
+
+        .toast.success {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .toast.success i {
+            color: #22c55e;
+        }
+
+        /* Animations for form elements */
+        .form-group, .security-note {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.15s; }
+        .security-note { animation-delay: 0.2s; }
+        .btn-login { animation-delay: 0.25s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Info Box for Credentials */
+        .credentials-info {
+            background: linear-gradient(135deg, #dbeafe, #eff6ff);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .credentials-info strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .credentials-info code {
+            background: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        /* Mobile Responsive */
+        @media (max-height: 800px) {
+            body {
+                padding: 1rem;
+                align-items: flex-start;
+            }
+            .login-container {
+                margin: 1rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .admin-badge {
+                width: 90px;
+                height: 90px;
+                font-size: 2rem;
+            }
+            .danger-zone {
+                font-size: 0.75rem;
+                padding: 0.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="login-container">
+        <div class="danger-zone">
+            <i class="fas fa-shield-alt"></i>
+            منطقة الوصول المقيد
+        </div>
+        <div class="scan-line"></div>
+
+        <div class="header">
+            <div class="admin-badge">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1>بوابة الإدارة الأكاديمية</h1>
+            <p class="subtitle">جامعة ماجد الشعباني - النظام الإداري الموحد</p>
+        </div>
+
+        <!-- بيانات الدخول الظاهرة -->
+       
+
+        <div class="attempts-tracker" id="attemptsTracker" style="display: none;">
+            <span><i class="fas fa-exclamation-circle" style="color: var(--danger);"></i> محاولات الدخول الفاشلة</span>
+            <span class="attempts-count" id="failCount">0/3</span>
+        </div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="adminUser" required value="admin" placeholder="اسم المستخدم الإداري">
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="password" id="adminPass" required placeholder="كلمة المرور الأمنية">
+                    <i class="fas fa-lock input-icon"></i>
+                    <i class="fas fa-eye toggle-password" id="togglePass" title="إظهار/إخفاء كلمة المرور"></i>
+                </div>
+            </div>
+
+            <div class="security-note">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>تنبيه أمني:</strong> يتم تسجيل جميع محاولات الدخول ومراقبتها بواسطة نظام الأمان
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                تسجيل الدخول للنظام
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="index.html">
+                <i class="fas fa-arrow-right"></i>
+                العودة للصفحة الرئيسية
+            </a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="toastMsg"></span>
+    </div>
+
+    <script>
+        // 🔓 بيانات الدخول الظاهرة مباشرة في الكود (Hardcoded)
+        const CORRECT_USERNAME = 'admin';
+        const CORRECT_PASSWORD = '123456';
+
+        let failedAttempts = 0;
+        const maxAttempts = 3;
+        let isLocked = false;
+
+        // طباعة بيانات الدخول في Console
+        console.log('%c🔐 بيانات الدخول الظاهرة:', 'background: #1e40af; color: white; font-size: 16px; padding: 5px 10px; border-radius: 5px;');
+        console.log('%cاسم المستخدم: %cadmin', 'color: #64748b', 'color: #1e40af; font-weight: bold; font-size: 14px;');
+        console.log('%cكلمة المرور: %c123456', 'color: #64748b', 'color: #dc2626; font-weight: bold; font-size: 14px;');
+
+        // تبديل إظهار/إخفاء كلمة المرور
+        document.getElementById('togglePass').addEventListener('click', function() {
+            const passInput = document.getElementById('adminPass');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+                this.style.color = '#1e40af';
+            } else {
+                passInput.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+                this.style.color = '#94a3b8';
+            }
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (isLocked) {
+                showToast('🚫 النظام مقفل مؤقتاً - انتظر 5 دقائق', false);
+                return;
+            }
+
+            const username = document.getElementById('adminUser').value.trim();
+            const password = document.getElementById('adminPass').value;
+
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+
+            // محاكاة تأخير للتحقق
+            setTimeout(() => {
+                if (username === CORRECT_USERNAME && password === CORRECT_PASSWORD) {
+                    // نجاح تسجيل الدخول
+                    showToast('✅ تم تسجيل الدخول بنجاح!', true);
+                    
+                    // حفظ الجلسة
+                    sessionStorage.setItem('adminSession', JSON.stringify({
+                        username: username,
+                        loginTime: new Date().toISOString(),
+                        ip: '127.0.0.1'
+                    }));
+
+                    // توجيه بعد ثانية
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1000);
+                } else {
+                    // فشل تسجيل الدخول
+                    failedAttempts++;
+                    document.getElementById('attemptsTracker').style.display = 'flex';
+                    document.getElementById('failCount').textContent = failedAttempts + '/3';
+                    
+                    if (failedAttempts >= maxAttempts) {
+                        isLocked = true;
+                        document.getElementById('loginBtn').disabled = true;
+                        document.getElementById('loginBtn').innerHTML = '<i class="fas fa-lock"></i> النظام مقفل';
+                        
+                        setTimeout(() => {
+                            isLocked = false;
+                            failedAttempts = 0;
+                            document.getElementById('attemptsTracker').style.display = 'none';
+                            document.getElementById('loginBtn').disabled = false;
+                            document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول للنظام';
+                        }, 300000); // 5 دقائق
+                        
+                        showToast('🚨 تنبيه حرج! تم قفل النظام الإداري لمدة 5 دقائق.', false);
+                    } else {
+                        showToast('❌ بيانات الدخول غير صحيحة! المحاولات المتبقية: ' + (maxAttempts - failedAttempts), false);
+                    }
+                }
+
+                if (!isLocked) {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول للنظام';
+                }
+            }, 800);
+        });
+
+        function showToast(msg, isSuccess) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const icon = toast.querySelector('i');
+            
+            toastMsg.textContent = msg;
+            
+            if (isSuccess) {
+                toast.classList.add('success');
+                icon.className = 'fas fa-check-circle';
+            } else {
+                toast.classList.remove('success');
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // منع النقر بزر اليمين على الصفحة (اختياري للأمان)
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

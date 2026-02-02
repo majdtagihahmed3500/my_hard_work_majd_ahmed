@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="جامعة ماجد الشعباني - النظام الأكاديمي الذكي مع حماية سيبرانية متقدمة">
+    <title>MGU - جامعة ماجد الشعباني | النظام الأكاديمي الذكي</title>
+    
+    <!-- تصحيح: إزالة الفراغات من URLs -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4f46e5; /* Indigo */
+            --secondary: #7c3aed; /* Violet */
+            --accent: #ec4899; /* Pink */
+            --gold: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            
+            /* Light Theme Colors */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-lg: rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f5f3ff 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Blobs */
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.2));
+            top: -200px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(245, 158, 11, 0.2));
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.25rem 5%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+            animation: float-logo 6s ease-in-out infinite;
+        }
+
+        @keyframes float-logo {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.7rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            position: relative;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 10rem 5% 6rem;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 650px;
+        }
+
+        .uni-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            border-radius: 50px;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+        }
+
+        .uni-badge i {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-shift 5s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .typing-text {
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .typing-text::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: var(--primary);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.1rem 2.25rem;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -5px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid rgba(79, 70, 229, 0.2);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(79, 70, 229, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+        }
+
+        /* 3D Cards */
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .cards-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            transform-style: preserve-3d;
+            animation: rotate-slow 25s linear infinite;
+        }
+
+        @keyframes rotate-slow {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .card-3d {
+            position: absolute;
+            width: 260px;
+            height: 170px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-3d:nth-child(1) {
+            transform: rotateY(0deg) translateZ(200px);
+            border-top: 4px solid var(--primary);
+        }
+
+        .card-3d:nth-child(2) {
+            transform: rotateY(120deg) translateZ(200px);
+            border-top: 4px solid var(--accent);
+        }
+
+        .card-3d:nth-child(3) {
+            transform: rotateY(240deg) translateZ(200px);
+            border-top: 4px solid var(--gold);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-3d:nth-child(2) .card-icon {
+            background: linear-gradient(135deg, var(--accent), var(--danger));
+            -webkit-background-clip: text;
+        }
+
+        .card-3d:nth-child(3) .card-icon {
+            background: linear-gradient(135deg, var(--gold), #f97316);
+            -webkit-background-clip: text;
+        }
+
+        .card-3d h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 800;
+        }
+
+        .card-3d p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(239, 68, 68, 0.1));
+            color: var(--accent);
+            border-color: rgba(236, 72, 153, 0.2);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            width: 100%;
+            padding: 3rem 5%;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2.75rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .hero { 
+                flex-direction: column; 
+                text-align: center; 
+                padding-top: 8rem;
+                padding-bottom: 4rem;
+            }
+            h1 { font-size: 2.75rem; }
+            .cards-container { 
+                transform: scale(0.7); 
+                margin: 2rem 0; 
+            }
+            .nav-links { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2.25rem; }
+            .btn { width: 100%; justify-content: center; }
+            .cta-group { flex-direction: column; }
+            .stat-number { font-size: 2rem; }
+        }
+
+        /* Pause animation on hover for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .cards-container {
+                animation: none;
+                transform: rotateY(20deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav role="navigation" aria-label="القائمة الرئيسية">
+        <div class="logo-container">
+            <div class="logo-icon" aria-hidden="true">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="logo-text">
+                <div class="logo-title">MGU</div>
+                <div class="logo-subtitle">جامعة ماجد الشعباني</div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="student-login.html">بوابة الطلاب</a></li>
+            <li><a href="admin-login.html">بوابة الإدارة</a></li>
+            <li><a href="#features">عن الجامعة</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" aria-label="مقدمة">
+        <div class="hero-content">
+            <div class="uni-badge">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                نظام الأمان السيبراني المتطور
+            </div>
+            
+        <h1>
+            جامعة<br>
+            <span class="gradient-text">ماجد الشعباني</span><br>
+            <span class="typing-text" id="typing"></span>
+        </h1>
+        
+        <p class="subtitle">
+            منصة تعليمية ذكية متكاملة مع حماية ذكية قائمة على الذكاء الاصطناعي 
+            لضمان بيئة أكاديمية آمنة ومتطورة للطلاب والمدربين.
+        </p>
+        
+        <div class="cta-group">
+            <a href="student-register.html" class="btn btn-primary" aria-label="التسجيل كطالب جديد">
+                <i class="fas fa-user-plus" aria-hidden="true"></i>
+                التسجيل الأكاديمي
+            </a>
+            <a href="student-login.html" class="btn btn-secondary" aria-label="تسجيل دخول الطلاب">
+                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                دخول الطلاب
+            </a>
+        </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="cards-container">
+                <div class="card-3d">
+                    <i class="fas fa-brain card-icon"></i>
+                    <h3>ذكاء اصطناعي</h3>
+                    <p>كشف التهديدات قبل حدوثها</p>
+                </div>
+                <div class="card-3d">
+                    <i class="fas fa-shield-halved card-icon"></i>
+                    <h3>حماية فائقة</h3>
+                    <p>تشفير متعدد الطبقات</p>
+                </div>
+                <div class="card-3d">
+                    <i class="fas fa-chart-line card-icon"></i>
+                    <h3>تحليل ذكي</h3>
+                    <p>مراقبة السلوك لحظياً</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features" aria-label="مميزات النظام">
+        <div class="section-header">
+            <h2 class="section-title">لماذا تختار <span>MGU</span>؟</h2>
+            <p class="section-subtitle">نظام أكاديمي متكامل يجمع بين التميز التعليمي والحماية السيبرانية المتقدمة</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-shield" aria-hidden="true"></i>
+                </div>
+                <h3 class="feature-title">حماية الهوية الرقمية</h3>
+                <p class="feature-desc">نظام تشفير متقدم AES-256 لحماية بيانات الطلاب والمدربين مع مصادقة ثنائية</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-eye" aria-hidden="true"></i>
+                </div>
+                <h3 class="feature-title">مراقبة ذكية للسلوك</h3>
+                <p class="feature-desc">تحليل AI لأنماط الاستخدام وكشف الأنشطة غير الطبيعية فور حدوثها</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                </div>
+                <h3 class="feature-title">تنبيهات فورية</h3>
+                <p class="feature-desc">إشعارات حية عند اكتشاف محاولات اختراق أو نشاط مشبوه في النظام</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-bar" role="contentinfo">
+        <div class="stat-item">
+            <div class="stat-number" id="studentCount">0+</div>
+            <div class="stat-label">طالب مسجل</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">أمان النظام</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">مراقبة دائمة</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" style="font-size: 2rem;">AI</div>
+            <div class="stat-label">حماية ذكية</div>
+        </div>
+    </div>
+
+    <script>
+        // Check localStorage availability
+        function isLocalStorageAvailable() {
+            try {
+                const test = '__test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch(e) {
+                console.warn('localStorage غير متاح في هذا المتصفح');
+                return false;
+            }
+        }
+
+        // Initialize storage with error handling
+        if (isLocalStorageAvailable()) {
+            try {
+                if (!localStorage.getItem('students')) {
+                    localStorage.setItem('students', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('logs')) {
+                    localStorage.setItem('logs', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('alerts')) {
+                    localStorage.setItem('alerts', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('admin')) {
+                    // تحذير: Base64 ليس تشفيراً آمناً، يستخدم هنا للتوضيح فقط
+                    localStorage.setItem('admin', JSON.stringify({
+                        username: 'admin',
+                        password: btoa('admin123'),
+                        lastLogin: null
+                    }));
+                }
+            } catch (e) {
+                console.error('خطأ في تهيئة التخزين:', e);
+            }
+        }
+
+        // Typing effect with cleanup
+        const words = ['للمستقبل', 'للتميز', 'للأمان', 'للإبداع'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingTimeout;
+        const typingElement = document.getElementById('typing');
+
+        function type() {
+            if (!typingElement) return;
+            
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 150;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = 2000;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            typingTimeout = setTimeout(type, typeSpeed);
+        }
+
+        // Start typing effect when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', type);
+        } else {
+            type();
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (typingTimeout) clearTimeout(typingTimeout);
+        });
+
+        // Counter animation with error handling
+        let counter;
+        if (isLocalStorageAvailable()) {
+            try {
+                const students = JSON.parse(localStorage.getItem('students')) || [];
+                const studentCount = students.length;
+                let current = 0;
+                const counterElement = document.getElementById('studentCount');
+                
+                if (studentCount === 0) {
+                    counterElement.textContent = '0+';
+                } else {
+                    counter = setInterval(() => {
+                        current += Math.ceil(studentCount / 20) || 1;
+                        if (current >= studentCount) {
+                            current = studentCount;
+                            clearInterval(counter);
+                        }
+                        if (counterElement) {
+                            counterElement.textContent = current + '+';
+                        }
+                    }, 50);
+                }
+            } catch (e) {
+                console.error('خطأ في تحميل الإحصائيات:', e);
+                const counterElement = document.getElementById('studentCount');
+                if (counterElement) counterElement.textContent = '0+';
+            }
+        }
+
+        // Cleanup counter on page unload
+        window.addEventListener('beforeunload', () => {
+            if (counter) clearInterval(counter);
+        });
+
+        // Pause animations when tab is not visible (performance optimization)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                document.body.style.animationPlayState = 'paused';
+            } else {
+                document.body.style.animationPlayState = 'running';
+            }
+        });
+    </script>
+</body>
+</html>
