@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>لوحة الطالب | MGU - جامعة ماجد الشعباني</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,6 +35,7 @@
 
         html {
             scroll-behavior: smooth;
+            font-size: 16px;
         }
 
         body {
@@ -44,7 +45,7 @@
             overflow-x: hidden;
         }
 
-        /* Background Blobs */
+        /* Background */
         .bg-blobs {
             position: fixed;
             top: 0;
@@ -86,7 +87,328 @@
             50% { transform: translate(30px, -30px) scale(1.05); }
         }
 
-        /* Sidebar - Light Mode */
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 3rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .majors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .major-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .major-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 0;
+        }
+
+        .major-card:hover::before,
+        .major-card.selected::before {
+            opacity: 1;
+        }
+
+        .major-card:hover,
+        .major-card.selected {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+        }
+
+        .major-card > * {
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+
+        .major-card:hover > *,
+        .major-card.selected > * {
+            color: white;
+        }
+
+        .major-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .major-card:hover .major-icon,
+        .major-card.selected .major-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .major-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .major-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .major-card:hover .major-desc,
+        .major-card.selected .major-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-confirm.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Courses Section */
+        .courses-section {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .courses-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .courses-title i {
+            color: var(--primary);
+        }
+
+        .btn-change-major {
+            padding: 0.75rem 1.5rem;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            color: var(--primary);
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-change-major:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.75rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .course-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px var(--shadow-lg);
+            border-color: rgba(79, 70, 229, 0.3);
+        }
+
+        .course-code {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .course-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .course-hours {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-progress {
+            margin-top: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        /* Sidebar */
         .sidebar {
             position: fixed;
             right: 0;
@@ -197,9 +519,19 @@
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             display: inline-block;
+            margin-bottom: 0.5rem;
         }
 
-        /* Navigation */
+        .profile-major {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
         .nav-menu {
             list-style: none;
         }
@@ -220,6 +552,8 @@
             border: 1px solid transparent;
             font-weight: 700;
             background: transparent;
+            cursor: pointer;
+            width: 100%;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -236,7 +570,6 @@
             font-size: 1.2rem;
         }
 
-        /* Main Content */
         .main-content {
             margin-right: 300px;
             padding: 2rem;
@@ -245,7 +578,6 @@
             z-index: 1;
         }
 
-        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -306,7 +638,6 @@
             transform: translateY(-2px);
         }
 
-        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -361,10 +692,6 @@
             gap: 0.75rem;
         }
 
-        .card-title i {
-            color: var(--primary);
-        }
-
         .stat-value {
             font-size: 2.5rem;
             font-weight: 900;
@@ -380,7 +707,6 @@
             font-weight: 600;
         }
 
-        /* Progress Ring */
         .progress-container {
             display: flex;
             align-items: center;
@@ -426,138 +752,25 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .progress-label {
-            color: var(--text-secondary);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        /* Table */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 0.75rem;
-        }
-
-        .data-table th {
-            color: var(--text-secondary);
-            font-weight: 800;
-            font-size: 0.95rem;
-            padding: 1rem;
-            text-align: right;
-            border-bottom: 2px solid var(--bg-secondary);
-        }
-
-        .data-table td {
-            padding: 1.25rem 1rem;
-            background: white;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-primary);
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .data-table tr:hover td {
-            background: #f8fafc;
-            transform: scale(1.01);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .data-table tr td:first-child {
-            border-radius: 0 12px 12px 0;
-        }
-
-        .data-table tr td:last-child {
-            border-radius: 12px 0 0 12px;
-        }
-
-        .grade-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 800;
-        }
-
-        .grade-a { background: rgba(16, 185, 129, 0.15); color: #059669; }
-        .grade-b { background: rgba(79, 70, 229, 0.15); color: #4f46e5; }
-        .grade-c { background: rgba(245, 158, 11, 0.15); color: #d97706; }
-
-        /* Activity */
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: white;
-            border-radius: 16px;
-            margin-bottom: 0.75rem;
-            border-right: 4px solid var(--primary);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-        }
-
-        .activity-item:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .activity-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: rgba(79, 70, 229, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        .activity-details h4 {
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .activity-details p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
         .chart-container {
             position: relative;
             height: 250px;
             width: 100%;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 4px;
-        }
+        .hidden { display: none !important; }
 
-        /* Responsive */
         @media (max-width: 968px) {
-            .sidebar { transform: translateX(100%); width: 280px; }
+            .sidebar { transform: translateX(100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
             .main-content { margin-right: 0; }
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .modal { padding: 2rem; }
+            .majors-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 640px) {
+            .courses-grid { grid-template-columns: 1fr; }
             .top-bar { flex-direction: column; gap: 1rem; text-align: center; }
-            .welcome-text h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -567,7 +780,70 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- SVG Gradient Definition -->
+    <!-- Major Selection Modal -->
+    <div class="modal-overlay" id="majorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">اختيار التخصص الدراسي</h2>
+                <p class="modal-subtitle">اختر تخصصك لعرض المقررات الدراسية الخاصة بك</p>
+            </div>
+            
+            <div class="majors-grid" id="majorsGrid">
+                <div class="major-card" data-major="cs" onclick="selectMajor('cs')">
+                    <div class="major-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="major-title">علوم الحاسب والذكاء الاصطناعي</h3>
+                    <p class="major-desc">برمجة، تعلم آلي، شبكات عصبية، ومعالجة اللغات الطبيعية</p>
+                </div>
+
+                <div class="major-card" data-major="cyber" onclick="selectMajor('cyber')">
+                    <div class="major-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="major-title">الأمن السيبراني</h3>
+                    <p class="major-desc">حماية الشبكات، اختبار اختراق، تحليل البرمجيات الخبيثة</p>
+                </div>
+
+                <div class="major-card" data-major="data" onclick="selectMajor('data')">
+                    <div class="major-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="major-title">علم البيانات</h3>
+                    <p class="major-desc">تحليل البيانات، تعدين البيانات، الإحصاء التطبيقي</p>
+                </div>
+
+                <div class="major-card" data-major="eng" onclick="selectMajor('eng')">
+                    <div class="major-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="major-title">الهندسة المتقدمة</h3>
+                    <p class="major-desc">هندسة الروبوتات، الطاقة المتجددة، المواد الذكية</p>
+                </div>
+
+                <div class="major-card" data-major="med" onclick="selectMajor('med')">
+                    <div class="major-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="major-title">الطب والعلوم الصحية</h3>
+                    <p class="major-desc">الطب البشري، التمريض، الصيدلة، والبحث الطبي</p>
+                </div>
+
+                <div class="major-card" data-major="business" onclick="selectMajor('business')">
+                    <div class="major-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="major-title">إدارة الأعمال الرقمية</h3>
+                    <p class="major-desc">التجارة الإلكترونية، التسويق الرقمي، ريادة الأعمال</p>
+                </div>
+            </div>
+
+            <button class="btn-confirm" id="confirmBtn" onclick="confirmMajor()">
+                تأكيد الاختيار
+            </button>
+        </div>
+    </div>
+
     <svg width="0" height="0" style="position: absolute;">
         <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -592,31 +868,26 @@
             </div>
             <div class="profile-name" id="profileName">--</div>
             <div class="profile-id" id="profileId">--</div>
+            <div class="profile-major" id="profileMajor">لم يتم اختيار التخصص</div>
         </div>
         
         <ul class="nav-menu">
             <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="#" class="nav-link active" onclick="showSection('dashboard', event)">
                     <i class="fas fa-home"></i>
                     <span>الرئيسية</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link" onclick="showSection('courses', event)">
                     <i class="fas fa-book"></i>
                     <span>المقررات</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link" onclick="showSection('performance', event)">
                     <i class="fas fa-chart-line"></i>
                     <span>الأداء</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>الأمان</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -644,228 +915,424 @@
             </div>
         </div>
 
-        <div class="dashboard-grid">
-            <!-- Stats Cards -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="stat-value">87%</div>
-                        <div class="stat-label">المعدل التراكمي</div>
+        <!-- Dashboard Section -->
+        <div id="dashboardSection">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="stat-value">87%</div>
+                            <div class="stat-label">المعدل التراكمي</div>
+                        </div>
+                        <i class="fas fa-chart-pie" style="font-size: 2.5rem; color: var(--primary); opacity: 0.2;"></i>
                     </div>
-                    <i class="fas fa-chart-pie" style="font-size: 2.5rem; color: var(--primary); opacity: 0.2;"></i>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="stat-value" id="coursesCount">0</div>
+                            <div class="stat-label">مقررات هذا الفصل</div>
+                        </div>
+                        <i class="fas fa-book-open" style="font-size: 2.5rem; color: var(--accent); opacity: 0.2;"></i>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="stat-value" id="hoursCount">0</div>
+                            <div class="stat-label">ساعة معتمدة</div>
+                        </div>
+                        <i class="fas fa-clock" style="font-size: 2.5rem; color: var(--warning); opacity: 0.2;"></i>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="progress-container">
+                        <div class="progress-ring">
+                            <svg width="140" height="140">
+                                <circle class="progress-ring-bg" cx="70" cy="70" r="60"></circle>
+                                <circle class="progress-ring-fill" cx="70" cy="70" r="60" 
+                                        stroke-dasharray="377" stroke-dashoffset="37.7"></circle>
+                            </svg>
+                            <div class="progress-text">90%</div>
+                        </div>
+                        <div class="progress-label">معدل الحضور</div>
+                    </div>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-area"></i>
+                            أداء المقررات الدراسية
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="stat-value">6</div>
-                        <div class="stat-label">مقررات هذا الفصل</div>
-                    </div>
-                    <i class="fas fa-book-open" style="font-size: 2.5rem; color: var(--accent); opacity: 0.2;"></i>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">ساعة معتمدة</div>
-                    </div>
-                    <i class="fas fa-clock" style="font-size: 2.5rem; color: var(--warning); opacity: 0.2;"></i>
-                </div>
-            </div>
-
-            <!-- Progress Circle -->
-            <div class="card">
-                <div class="progress-container">
-                    <div class="progress-ring">
-                        <svg width="140" height="140">
-                            <circle class="progress-ring-bg" cx="70" cy="70" r="60"></circle>
-                            <circle class="progress-ring-fill" cx="70" cy="70" r="60" 
-                                    stroke-dasharray="377" stroke-dashoffset="37.7"></circle>
-                        </svg>
-                        <div class="progress-text">90%</div>
-                    </div>
-                    <div class="progress-label">معدل الحضور</div>
-                </div>
-            </div>
-
-            <!-- Chart -->
-            <div class="card" style="grid-column: span 2;">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-chart-area"></i>
-                        أداء المقررات الدراسية
+        <!-- Courses Section -->
+        <div id="coursesSection" class="hidden">
+            <div class="courses-section">
+                <div class="courses-header">
+                    <h3 class="courses-title">
+                        <i class="fas fa-book"></i>
+                        مقررات التخصص
                     </h3>
+                    <button class="btn-change-major" onclick="openMajorModal()">
+                        <i class="fas fa-exchange-alt"></i>
+                        تغيير التخصص
+                    </button>
                 </div>
-                <div class="chart-container">
-                    <canvas id="performanceChart"></canvas>
+                <div class="courses-grid" id="coursesContainer">
+                    <!-- Courses will be inserted here dynamically -->
                 </div>
             </div>
+        </div>
 
-            <!-- Grades -->
+        <!-- Performance Section -->
+        <div id="performanceSection" class="hidden">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-star"></i>
-                        آخر التقييمات
-                    </h3>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>المقرر</th>
-                            <th>التقييم</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>الأمن السيبراني المتقدم</td>
-                            <td><span class="grade-badge grade-a"><i class="fas fa-trophy"></i> 98%</span></td>
-                        </tr>
-                        <tr>
-                            <td>تحليل البيانات الضخمة</td>
-                            <td><span class="grade-badge grade-a"><i class="fas fa-medal"></i> 95%</span></td>
-                        </tr>
-                        <tr>
-                            <td>الذكاء الاصطناعي</td>
-                            <td><span class="grade-badge grade-b"><i class="fas fa-star"></i> 88%</span></td>
-                        </tr>
-                        <tr>
-                            <td>إنترنت الأشياء</td>
-                            <td><span class="grade-badge grade-c"><i class="fas fa-chart-line"></i> 82%</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Activity -->
-            <div class="card" style="grid-column: span 2;">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-history"></i>
-                        النشاطات الأخيرة
-                    </h3>
-                </div>
-                <div id="activityList">
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>تسليم واجب البرمجة</h4>
-                            <p>تم تسليم واجب JavaScript بنجاح</p>
-                        </div>
-                    </div>
-                    <div class="activity-item" style="border-right-color: var(--warning);">
-                        <div class="activity-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>تنبيه موعد الامتحان</h4>
-                            <p>امتحان الأمن السيبراني بعد 3 أيام</p>
-                        </div>
-                    </div>
-                    <div class="activity-item" style="border-right-color: var(--success);">
-                        <div class="activity-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>تم تغيير كلمة المرور</h4>
-                            <p>تحديث أمني للحساب</p>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="card-title" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-chart-bar"></i>
+                    تقرير الأداء الأكاديمي
+                </h3>
+                <p style="color: var(--text-secondary); text-align: center; padding: 3rem;">
+                    قريباً - سيتم عرض التقرير التفصيلي هنا
+                </p>
             </div>
         </div>
     </main>
 
     <script>
+        // Courses Database
+        const majorsData = {
+            cs: {
+                name: 'علوم الحاسب والذكاء الاصطناعي',
+                icon: 'fa-brain',
+                courses: [
+                    { code: 'CS101', name: 'مقدمة في البرمجة والخوارزميات', hours: 3, progress: 85 },
+                    { code: 'CS102', name: 'الذكاء الاصطناعي وتعلم الآلة', hours: 3, progress: 70 },
+                    { code: 'CS103', name: 'الشبكات العصبية العميقة', hours: 4, progress: 60 },
+                    { code: 'CS104', name: 'معالجة اللغات الطبيعية', hours: 3, progress: 45 },
+                    { code: 'CS105', name: 'رؤية الحاسوب', hours: 3, progress: 30 },
+                    { code: 'CS106', name: 'الروبوتات والأنظمة الذكية', hours: 4, progress: 15 }
+                ]
+            },
+            cyber: {
+                name: 'الأمن السيبراني',
+                icon: 'fa-shield-alt',
+                courses: [
+                    { code: 'CY101', name: 'أساسيات الأمن السيبراني', hours: 3, progress: 90 },
+                    { code: 'CY102', name: 'اختبار الاختراق الأخلاقي', hours: 4, progress: 75 },
+                    { code: 'CY103', name: 'تحليل البرمجيات الخبيثة', hours: 3, progress: 65 },
+                    { code: 'CY104', name: 'أمن الشبكات المتقدم', hours: 4, progress: 50 },
+                    { code: 'CY105', name: 'التحقيق الرقمي الجنائي', hours: 3, progress: 35 },
+                    { code: 'CY106', name: 'إدارة المخاطر والامتثال', hours: 3, progress: 20 }
+                ]
+            },
+            data: {
+                name: 'علم البيانات',
+                icon: 'fa-database',
+                courses: [
+                    { code: 'DS101', name: 'تحليل البيانات الاستكشافي', hours: 3, progress: 80 },
+                    { code: 'DS102', name: 'التعلم الإحصائي', hours: 4, progress: 70 },
+                    { code: 'DS103', name: 'قواعد البيانات الضخمة', hours: 3, progress: 55 },
+                    { code: 'DS104', name: 'تصور البيانات المتقدم', hours: 3, progress: 40 },
+                    { code: 'DS105', name: 'تعدين البيانات', hours: 4, progress: 25 },
+                    { code: 'DS106', name: 'التعلم العميق للبيانات', hours: 3, progress: 10 }
+                ]
+            },
+            eng: {
+                name: 'الهندسة المتقدمة',
+                icon: 'fa-cogs',
+                courses: [
+                    { code: 'EN101', name: 'هندسة الروبوتات المتقدمة', hours: 4, progress: 85 },
+                    { code: 'EN102', name: 'المواد الذكية والنانوية', hours: 3, progress: 70 },
+                    { code: 'EN103', name: 'الطاقة المتجددة والتخزين', hours: 4, progress: 60 },
+                    { code: 'EN104', name: 'التصنيع الإضافي (الطباعة 3D)', hours: 3, progress: 45 },
+                    { code: 'EN105', name: 'الأنظمة الكهربائية الذكية', hours: 3, progress: 30 },
+                    { code: 'EN106', name: 'إنترنت الأشياء الصناعي', hours: 4, progress: 15 }
+                ]
+            },
+            med: {
+                name: 'الطب والعلوم الصحية',
+                icon: 'fa-heartbeat',
+                courses: [
+                    { code: 'MD101', name: 'التشريح البشري المتقدم', hours: 4, progress: 88 },
+                    { code: 'MD102', name: 'الفيزيولوجيا المرضية', hours: 4, progress: 75 },
+                    { code: 'MD103', name: 'الأدوية والعلاجات الحديثة', hours: 3, progress: 60 },
+                    { code: 'MD104', name: 'التشخيص الإكلينيكي', hours: 4, progress: 50 },
+                    { code: 'MD105', name: 'البحث الطبي والأخلاقيات', hours: 3, progress: 35 },
+                    { code: 'MD106', name: 'التقنيات الطبية المتقدمة', hours: 3, progress: 20 }
+                ]
+            },
+            business: {
+                name: 'إدارة الأعمال الرقمية',
+                icon: 'fa-chart-line',
+                courses: [
+                    { code: 'BU101', name: 'التجارة الإلكترونية المتقدمة', hours: 3, progress: 82 },
+                    { code: 'BU102', name: 'التسويق الرقمي وتحليله', hours: 3, progress: 70 },
+                    { code: 'BU103', name: 'ريادة الأعمال التقنية', hours: 4, progress: 65 },
+                    { code: 'BU104', name: 'إدارة المشاريع الرقمية', hours: 3, progress: 45 },
+                    { code: 'BU105', name: 'التحول الرقمي للمؤسسات', hours: 3, progress: 30 },
+                    { code: 'BU106', name: 'التحليل المالي للبيانات الضخمة', hours: 3, progress: 15 }
+                ]
+            }
+        };
+
+        let selectedMajor = null;
+        let currentStudent = null;
+
         // Check auth
-        const currentStudent = JSON.parse(sessionStorage.getItem('currentStudent'));
-        if (!currentStudent) {
-            window.location.href = 'student-login.html';
+        function init() {
+            currentStudent = JSON.parse(sessionStorage.getItem('currentStudent'));
+            if (!currentStudent) {
+                window.location.href = 'student-login.html';
+                return;
+            }
+
+            // Populate student data
+            document.getElementById('profileName').textContent = currentStudent.name;
+            document.getElementById('profileId').textContent = currentStudent.id;
+            document.getElementById('welcomeName').textContent = currentStudent.name.split(' ')[0];
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ar-SA', options);
+
+            // Check if student has major
+            if (!currentStudent.major) {
+                openMajorModal();
+            } else {
+                selectedMajor = currentStudent.major;
+                updateDashboard();
+                renderCourses();
+            }
+
+            initChart();
+            logActivity();
         }
 
-        // Populate data
-        document.getElementById('profileName').textContent = currentStudent.name;
-        document.getElementById('profileId').textContent = currentStudent.id;
-        document.getElementById('welcomeName').textContent = currentStudent.name.split(' ')[0];
+        function openMajorModal() {
+            document.getElementById('majorModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset selection
+            document.querySelectorAll('.major-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('confirmBtn').classList.remove('active');
+            selectedMajor = null;
+        }
 
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ar-SA', options);
+        function closeMajorModal() {
+            document.getElementById('majorModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-        // Chart
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
-        gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+        function selectMajor(major) {
+            // Remove previous selection
+            document.querySelectorAll('.major-card').forEach(card => card.classList.remove('selected'));
+            
+            // Add selection to clicked card
+            document.querySelector(`[data-major="${major}"]`).classList.add('selected');
+            
+            selectedMajor = major;
+            document.getElementById('confirmBtn').classList.add('active');
+        }
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['الأسبوع 1', 'الأسبوع 2', 'الأسبوع 3', 'الأسبوع 4', 'الأسبوع 5', 'الأسبوع 6'],
-                datasets: [{
-                    label: 'الأداء الأكاديمي',
-                    data: [85, 88, 92, 90, 95, 98],
-                    borderColor: '#4f46e5',
-                    backgroundColor: gradient,
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#4f46e5',
-                    pointBorderWidth: 3,
-                    pointRadius: 6,
-                    pointHoverRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
+        function confirmMajor() {
+            if (!selectedMajor) return;
+            
+            // Save to student data
+            currentStudent.major = selectedMajor;
+            sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+            
+            // Update localStorage
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const index = students.findIndex(s => s.id === currentStudent.id);
+            if (index !== -1) {
+                students[index].major = selectedMajor;
+                localStorage.setItem('students', JSON.stringify(students));
+            }
+            
+            closeMajorModal();
+            updateDashboard();
+            renderCourses();
+            showToast('تم اختيار التخصص بنجاح', majorsData[selectedMajor].name, 'success');
+        }
+
+        function updateDashboard() {
+            if (!selectedMajor) return;
+            
+            const major = majorsData[selectedMajor];
+            const totalHours = major.courses.reduce((sum, c) => sum + c.hours, 0);
+            
+            document.getElementById('profileMajor').textContent = major.name;
+            document.getElementById('coursesCount').textContent = major.courses.length;
+            document.getElementById('hoursCount').textContent = totalHours;
+        }
+
+        function renderCourses() {
+            if (!selectedMajor) return;
+            
+            const container = document.getElementById('coursesContainer');
+            const major = majorsData[selectedMajor];
+            
+            container.innerHTML = major.courses.map((course, index) => `
+                <div class="course-card" style="animation: fadeIn 0.5s ease ${index * 0.1}s both;">
+                    <span class="course-code">${course.code}</span>
+                    <h4 class="course-name">${course.name}</h4>
+                    <div class="course-hours">
+                        <i class="fas fa-clock"></i>
+                        <span>${course.hours} ساعات معتمدة</span>
+                    </div>
+                    <div class="course-progress">
+                        <div class="progress-header">
+                            <span>التقدم</span>
+                            <span>${course.progress}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${course.progress}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showSection(section, event) {
+            if (event) event.preventDefault();
+            
+            // Hide all sections
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('coursesSection').classList.add('hidden');
+            document.getElementById('performanceSection').classList.add('hidden');
+            
+            // Show selected section
+            document.getElementById(section + 'Section').classList.remove('hidden');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            if (event && event.target) {
+                event.target.closest('.nav-link').classList.add('active');
+            }
+            
+            // Render courses if courses section
+            if (section === 'courses') {
+                renderCourses();
+            }
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
+            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['الأسبوع 1', 'الأسبوع 2', 'الأسبوع 3', 'الأسبوع 4', 'الأسبوع 5', 'الأسبوع 6'],
+                    datasets: [{
+                        label: 'الأداء الأكاديمي',
+                        data: [82, 85, 88, 86, 91, 89],
+                        borderColor: '#4f46e5',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#4f46e5',
+                        pointBorderWidth: 3,
+                        pointRadius: 6
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 70,
-                        max: 100,
-                        grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                        ticks: { 
-                            color: '#64748b',
-                            font: { family: 'Tajawal', weight: '600' }
-                        }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { 
-                            color: '#64748b',
-                            font: { family: 'Tajawal', weight: '600' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 100,
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                            ticks: { color: '#64748b', font: { family: 'Tajawal', weight: '600' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { family: 'Tajawal', weight: '600' } }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        function showToast(title, message, type = 'success') {
+            // Simple toast implementation
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                z-index: 3000;
+                font-weight: 700;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.innerHTML = `<strong>${title}</strong><br>${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         function logout() {
             sessionStorage.removeItem('currentStudent');
             window.location.href = 'index.html';
         }
 
-        // Log view
-        const logs = JSON.parse(localStorage.getItem('logs')) || [];
-        logs.push({
-            type: 'page_view',
-            studentId: currentStudent.id,
-            page: 'dashboard',
-            timestamp: new Date().toISOString(),
-            ip: '156.204.11.' + Math.floor(Math.random() * 255),
-            university: 'MGU'
-        });
-        localStorage.setItem('logs', JSON.stringify(logs));
+        function logActivity() {
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            logs.push({
+                type: 'page_view',
+                studentId: currentStudent.id,
+                page: 'student_dashboard',
+                timestamp: new Date().toISOString(),
+                ip: '156.204.11.' + Math.floor(Math.random() * 255)
+            });
+            localStorage.setItem('logs', JSON.stringify(logs));
+        }
+
+        // CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { transform: translateX(-100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(-100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
